@@ -15,7 +15,7 @@ def get_cpu_temp():     # get CPU temperature and store it into file "/sys/class
     tmp = open('/sys/class/thermal/thermal_zone0/temp')
     cpu = tmp.read()
     tmp.close()
-    return '{:.2f}'.format( float(cpu)/1000 ) + ' CHARLIE'
+    return '{:.2f}'.format( float(cpu)/1000 ) + ' '
  
 def get_time_now():     # get system time
     return datetime.now().strftime('    %H:%M:%S')
@@ -26,8 +26,9 @@ def loop():
     while(True):         
         #lcd.clear()
         lcd.setCursor(0,0)  # set cursor position
-        lcd.message( 'CPU: ' + get_cpu_temp()+'\n' )# display CPU temperature
-        lcd.message( get_time_now() )   # display the time
+        # lcd.message( 'CPU: ' + get_cpu_temp()+'\n' )# display CPU temperature
+        # lcd.message( get_time_now() )   # display the time
+        lcd.message('hello')
         sleep(1)
         
 def destroy():
