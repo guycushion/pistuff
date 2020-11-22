@@ -15,7 +15,7 @@ def get_cpu_temp():     # get CPU temperature and store it into file "/sys/class
     tmp = open('/sys/class/thermal/thermal_zone0/temp')
     cpu = tmp.read()
     tmp.close()
-    return '{:.2f}'.format( float(cpu)/1000 ) + ' C'
+    return '{:.2f}'.format( float(cpu)/1000 ) + ' CHARLIE'
  
 def get_time_now():     # get system time
     return datetime.now().strftime('    %H:%M:%S')
