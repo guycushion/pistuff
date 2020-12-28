@@ -105,37 +105,52 @@ myAWSIoTMQTTShadowClient.configureAutoReconnectBackoffTime(1, 32, 20)
 myAWSIoTMQTTShadowClient.configureConnectDisconnectTimeout(10) # 10 sec
 myAWSIoTMQTTShadowClient.configureMQTTOperationTimeout(5) # 5 sec
 
-# Initialize Raspberry Pi's I2C interface
-i2c_bus = busio.I2C(SCL, SDA)
+# # Initialize Raspberry Pi's I2C interface
+# i2c_bus = busio.I2C(SCL, SDA)
 
-# Intialize SeeSaw, Adafruit's Circuit Python library
-ss = Seesaw(i2c_bus, addr=0x36)
+# # Intialize SeeSaw, Adafruit's Circuit Python library
+# ss = Seesaw(i2c_bus, addr=0x36)
 
 # Connect to AWS IoT
 myAWSIoTMQTTShadowClient.connect()
 
-# Create a device shadow handler, use this to update and delete shadow document
-deviceShadowHandler = myAWSIoTMQTTShadowClient.createShadowHandlerWithName(args.thingName, True)
+# Publish to the same topic in a loop forever
+loopCount = 0
 
-# Delete current shadow JSON doc
-deviceShadowHandler.shadowDelete(customShadowCallback_Delete, 5)
-
-# Read data from moisture sensor and update shadow
 while True:
+    message = {}
+    message['message'] = "demo-topic-sample-message"
+    message['sequence'] = loopCount
+    messageJson = json.dumps(message)
+    myAWSIoTMQTTShadowClient.publish(topic, messageJson, 1)
+    print('Published topic %s: %s\n' % (topic, messageJson))
+    loopCount += 1
+    time.sleep(10)
 
-    # read moisture level through capacitive touch pad
-    moistureLevel = ss.moisture_read()
+myAWSIoTMQTTShadowClient.disconnect()
 
-    # read temperature from the temperature sensor
-    temp = ss.get_temp()
+# # Create a device shadow handler, use this to update and delete shadow document
+# deviceShadowHandler = myAWSIoTMQTTShadowClient.createShadowHandlerWithName(args.thingName, True)
 
-    # Display moisture and temp readings
-    print("Moisture Level: {}".format(moistureLevel))
-    print("Temperature: {}".format(temp))
+# # Delete current shadow JSON doc
+# deviceShadowHandler.shadowDelete(customShadowCallback_Delete, 5)
+
+# # Read data from moisture sensor and update shadow
+# while True:
+
+#     # read moisture level through capacitive touch pad
+#     moistureLevel = ss.moisture_read()
+
+#     # read temperature from the temperature sensor
+#     temp = ss.get_temp()
+
+#     # Display moisture and temp readings
+#     print("Moisture Level: {}".format(moistureLevel))
+#     print("Temperature: {}".format(temp))
     
-    # Create message payload
-    payload = {"state":{"reported":{"moisture":str(moistureLevel),"temp":str(temp)}}}
+#     # Create message payload
+#     payload = {"state":{"reported":{"moisture":str(moistureLevel),"temp":str(temp)}}}
 
-    # Update shadow
-    deviceShadowHandler.shadowUpdate(json.dumps(payload), customShadowCallback_Update, 5)
-    time.sleep(1)
+#     # Update shadow
+#     deviceShadowHandler.shadowUpdate(json.dumps(payload), customShadowCallback_Update, 5)
+#     time.sleep(1)
