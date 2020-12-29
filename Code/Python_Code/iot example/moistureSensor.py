@@ -1,6 +1,6 @@
 
 from adafruit_seesaw.seesaw import Seesaw
-from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTShadowClient
+from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 from board import SCL, SDA
 
 import logging
