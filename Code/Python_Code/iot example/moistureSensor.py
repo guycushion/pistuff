@@ -58,7 +58,7 @@ def customShadowCallback_Delete(payload, responseStatus, token):
 def recievemessage(self, params, packet):
  print('recieving message')
  print('Topic ' + packet.topic)
- print("Payload " + (packet.payload))
+ print("Payload ", (packet.payload))
 
 # Read in command-line parameters
 def parseArgs():
