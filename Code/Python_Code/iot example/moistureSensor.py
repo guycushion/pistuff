@@ -95,9 +95,9 @@ if not args.port:
 
 
 # Init AWSIoTMQTTShadowClient
-myAWSIoTMQTTShadowClient = None
-myAWSIoTMQTTShadowClient = AWSIoTMQTTShadowClient(args.clientId)
-myAWSIoTMQTTShadowClient.configureEndpoint(args.host, args.port)
+myAWSIoTMQTTClient = None
+myAWSIoTMQTTClient = AWSIoTMQTTClient(args.clientId)
+myAWSIoTMQTTClient.configureEndpoint(args.host, args.port)
 print("args.rootCAPath " + args.rootCAPath)
 print("args.privateKeyPath " + args.privateKeyPath)
 print("args.certificatePath " + args.certificatePath)
@@ -106,12 +106,12 @@ print("args.certificatePath " + args.certificatePath)
 
 
 
-myAWSIoTMQTTShadowClient.configureCredentials(args.rootCAPath, args.privateKeyPath, args.certificatePath)
+myAWSIoTMQTTClient.configureCredentials(args.rootCAPath, args.privateKeyPath, args.certificatePath)
 
 # AWSIoTMQTTShadowClient connection configuration
-myAWSIoTMQTTShadowClient.configureAutoReconnectBackoffTime(1, 32, 20)
-myAWSIoTMQTTShadowClient.configureConnectDisconnectTimeout(10) # 10 sec
-myAWSIoTMQTTShadowClient.configureMQTTOperationTimeout(5) # 5 sec
+myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)
+myAWSIoTMQTTClient.configureConnectDisconnectTimeout(10) # 10 sec
+myAWSIoTMQTTClient.configureMQTTOperationTimeout(5) # 5 sec
 
 # # Initialize Raspberry Pi's I2C interface
 # i2c_bus = busio.I2C(SCL, SDA)
@@ -120,7 +120,7 @@ myAWSIoTMQTTShadowClient.configureMQTTOperationTimeout(5) # 5 sec
 # ss = Seesaw(i2c_bus, addr=0x36)
 
 # Connect to AWS IoT
-myAWSIoTMQTTShadowClient.connect()
+myAWSIoTMQTTClient.connect()
 
 # Publish to the same topic in a loop forever
 loopCount = 0
@@ -130,15 +130,15 @@ while True:
     message['message'] = "demo-topic-sample-message"
     message['sequence'] = loopCount
     messageJson = json.dumps(message)
-    myAWSIoTMQTTShadowClient.publish(topic, messageJson, 1)
+    myAWSIoTMQTTClient.publish(topic, messageJson, 1)
     print('Published topic %s: %s\n' % (topic, messageJson))
     loopCount += 1
     time.sleep(10)
 
-myAWSIoTMQTTShadowClient.disconnect()
+myAWSIoTMQTTClient.disconnect()
 
 # # Create a device shadow handler, use this to update and delete shadow document
-# deviceShadowHandler = myAWSIoTMQTTShadowClient.createShadowHandlerWithName(args.thingName, True)
+# deviceShadowHandler = myAWSIoTMQTTClient.createShadowHandlerWithName(args.thingName, True)
 
 # # Delete current shadow JSON doc
 # deviceShadowHandler.shadowDelete(customShadowCallback_Delete, 5)
