@@ -98,9 +98,9 @@ if not args.port:
 myAWSIoTMQTTShadowClient = None
 myAWSIoTMQTTShadowClient = AWSIoTMQTTShadowClient(args.clientId)
 myAWSIoTMQTTShadowClient.configureEndpoint(args.host, args.port)
- print("args.rootCAPath " + args.rootCAPath)
- print("args.privateKeyPath " + args.privateKeyPath)
- print("args.certificatePath " + args.certificatePath)
+print("args.rootCAPath " + args.rootCAPath)
+print("args.privateKeyPath " + args.privateKeyPath)
+print("args.certificatePath " + args.certificatePath)
 
 
 
