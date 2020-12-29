@@ -118,7 +118,7 @@ myMQTTClient.connect()
 while True:
     now = datetime.utcnow()
     now_str = now.strftime('%Y-%m-%dT%H:%M:%SZ')
-    payload = '{ "timestamp": "' + now_str + '","message": ' + "hello testing IOT" + ' }'
+    payload = '{ "timestamp": "' + now_str + '","message": ' + "hello charlie" + ' }'
     myMQTTClient.publish("thing01/data", payload, 0)
     time.sleep(5)
 
