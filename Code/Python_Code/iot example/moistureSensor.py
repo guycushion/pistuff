@@ -103,12 +103,13 @@ myMQTTClient.configureDrainingFrequency(2) # Draining: 2 Hz
 myMQTTClient.configureConnectDisconnectTimeout(10) # 10 sec
 myMQTTClient.configureMQTTOperationTimeout(5) # 5 sec
 
+myMQTTClient.connect()
 
-now = datetime.utcnow()
-now_str = now.strftime('%Y-%m-%dT%H:%M:%SZ')
-payload = '{ "timestamp": "' + now_str + '","message": ' + "hello testing IOT" + ' }'
-myMQTTClient.publish("thing01/data", payload, 0)
-time.sleep(10)
+# now = datetime.utcnow()
+# now_str = now.strftime('%Y-%m-%dT%H:%M:%SZ')
+# payload = '{ "timestamp": "' + now_str + '","message": ' + "hello testing IOT" + ' }'
+# myMQTTClient.publish("thing01/data", payload, 0)
+# time.sleep(10)
 
 
 
