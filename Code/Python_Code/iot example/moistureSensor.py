@@ -2,6 +2,7 @@
 from adafruit_seesaw.seesaw import Seesaw
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 from board import SCL, SDA
+from datetime import date, datetime
 
 import logging
 import time
@@ -94,48 +95,65 @@ if not args.port:
     args.port = 8883
 
 
-# Init AWSIoTMQTTShadowClient
-myAWSIoTMQTTClient = None
-myAWSIoTMQTTClient = AWSIoTMQTTClient(args.clientId)
-myAWSIoTMQTTClient.configureEndpoint(args.host, args.port)
-print("args.rootCAPath " + args.rootCAPath)
-print("args.privateKeyPath " + args.privateKeyPath)
-print("args.certificatePath " + args.certificatePath)
+myMQTTClient = AWSIoTMQTTClient(args.clientId)
+myMQTTClient.configureEndpoint(args.host, args.port)
+myMQTTClient.configureCredentials(args.rootCAPath, args.privateKeyPath, args.certificatePath)
+myMQTTClient.configureOfflinePublishQueueing(-1) # Infinite offline Publish queueing
+myMQTTClient.configureDrainingFrequency(2) # Draining: 2 Hz
+myMQTTClient.configureConnectDisconnectTimeout(10) # 10 sec
+myMQTTClient.configureMQTTOperationTimeout(5) # 5 sec
+
+now = datetime.utcnow()
+now_str = now.strftime('%Y-%m-%dT%H:%M:%SZ')
+payload = '{ "timestamp": "' + now_str + '","message": ' + "hello testing IOT" + ' }'
+myMQTTClient.publish("thing01/data", payload, 0)
 
 
 
 
 
-myAWSIoTMQTTClient.configureCredentials(args.rootCAPath, args.privateKeyPath, args.certificatePath)
+# # Init AWSIoTMQTTShadowClient
+# myAWSIoTMQTTClient = None
+# myAWSIoTMQTTClient = AWSIoTMQTTClient(args.clientId)
+# myAWSIoTMQTTClient.configureEndpoint(args.host, args.port)
+# print("args.rootCAPath " + args.rootCAPath)
+# print("args.privateKeyPath " + args.privateKeyPath)
+# print("args.certificatePath " + args.certificatePath)
 
-# AWSIoTMQTTShadowClient connection configuration
-myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)
-myAWSIoTMQTTClient.configureConnectDisconnectTimeout(10) # 10 sec
-myAWSIoTMQTTClient.configureMQTTOperationTimeout(5) # 5 sec
 
-# # Initialize Raspberry Pi's I2C interface
-# i2c_bus = busio.I2C(SCL, SDA)
 
-# # Intialize SeeSaw, Adafruit's Circuit Python library
-# ss = Seesaw(i2c_bus, addr=0x36)
 
-# Connect to AWS IoT
-myAWSIoTMQTTClient.connect()
 
-# Publish to the same topic in a loop forever
-loopCount = 0
+# myAWSIoTMQTTClient.configureCredentials(args.rootCAPath, args.privateKeyPath, args.certificatePath)
 
-while True:
-    message = {}
-    message['message'] = "demo-topic-sample-message"
-    message['sequence'] = loopCount
-    messageJson = json.dumps(message)
-    myAWSIoTMQTTClient.publish(topic, messageJson, 1)
-    print('Published topic %s: %s\n' % (topic, messageJson))
-    loopCount += 1
-    time.sleep(10)
+# # AWSIoTMQTTShadowClient connection configuration
+# myAWSIoTMQTTClient.configureAutoReconnectBackoffTime(1, 32, 20)
+# myAWSIoTMQTTClient.configureConnectDisconnectTimeout(10) # 10 sec
+# myAWSIoTMQTTClient.configureMQTTOperationTimeout(5) # 5 sec
 
-myAWSIoTMQTTClient.disconnect()
+# # # Initialize Raspberry Pi's I2C interface
+# # i2c_bus = busio.I2C(SCL, SDA)
+
+# # # Intialize SeeSaw, Adafruit's Circuit Python library
+# # ss = Seesaw(i2c_bus, addr=0x36)
+
+# # Connect to AWS IoT
+# myAWSIoTMQTTClient.connect()
+
+# # Publish to the same topic in a loop forever
+# loopCount = 0
+
+# while True:
+#     message = {}
+#     message['message'] = "demo-topic-sample-message"
+#     message['sequence'] = loopCount
+#     messageJson = json.dumps(message)
+#     myAWSIoTMQTTClient.publish(topic, messageJson, 1)
+#     print('Published topic %s: %s\n' % (topic, messageJson))
+#     loopCount += 1
+#     time.sleep(10)
+
+# myAWSIoTMQTTClient.disconnect()
 
 # # Create a device shadow handler, use this to update and delete shadow document
 # deviceShadowHandler = myAWSIoTMQTTClient.createShadowHandlerWithName(args.thingName, True)
