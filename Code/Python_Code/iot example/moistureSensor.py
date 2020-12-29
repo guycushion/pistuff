@@ -110,16 +110,17 @@ myMQTTClient.configureConnectDisconnectTimeout(10) # 10 sec
 myMQTTClient.configureMQTTOperationTimeout(5) # 5 sec
 
 myMQTTClient.connect()
-myMQTTClient.subscribe("thing01/data", 1 , recievemessage)
+# myMQTTClient.subscribe("thing01/data", 1 , recievemessage)
+
+# while True:
+#     time.sleep(5)
 
 while True:
+    now = datetime.utcnow()
+    now_str = now.strftime('%Y-%m-%dT%H:%M:%SZ')
+    payload = '{ "timestamp": "' + now_str + '","message": ' + "hello testing IOT" + ' }'
+    myMQTTClient.publish("thing01/data", payload, 0)
     time.sleep(5)
-
-# now = datetime.utcnow()
-# now_str = now.strftime('%Y-%m-%dT%H:%M:%SZ')
-# payload = '{ "timestamp": "' + now_str + '","message": ' + "hello testing IOT" + ' }'
-# myMQTTClient.publish("thing01/data", payload, 0)
-# time.sleep(10)
 
 
 
