@@ -113,7 +113,7 @@ myMQTTClient.connect()
 myMQTTClient.subscribe("thing01/data", 1 , recievemessage)
 
 while True:
-    time.sleep(10)
+    time.sleep(5)
 
 # now = datetime.utcnow()
 # now_str = now.strftime('%Y-%m-%dT%H:%M:%SZ')
