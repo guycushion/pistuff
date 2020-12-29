@@ -103,6 +103,7 @@ if not args.port:
 myMQTTClient = AWSIoTMQTTClient(args.clientId)
 myMQTTClient.configureEndpoint(args.host, args.port)
 myMQTTClient.configureCredentials(args.rootCAPath, args.privateKeyPath, args.certificatePath)
+
 myMQTTClient.configureOfflinePublishQueueing(-1) # Infinite offline Publish queueing
 myMQTTClient.configureDrainingFrequency(2) # Draining: 2 Hz
 myMQTTClient.configureConnectDisconnectTimeout(10) # 10 sec
@@ -110,6 +111,9 @@ myMQTTClient.configureMQTTOperationTimeout(5) # 5 sec
 
 myMQTTClient.connect()
 myMQTTClient.subscribe("thing01/data", 1 , recievemessage)
+
+while True:
+    time.sleep(10)
 
 # now = datetime.utcnow()
 # now_str = now.strftime('%Y-%m-%dT%H:%M:%SZ')
