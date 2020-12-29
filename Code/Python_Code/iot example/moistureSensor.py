@@ -55,6 +55,11 @@ def customShadowCallback_Delete(payload, responseStatus, token):
         print("Delete request " + token + " rejected!")
 
 
+def recievemessage(self, params, packet):
+ print('recieving message')
+ print('Topic ' + packet.topic)
+ print('Payload ' + packet.payload)
+
 # Read in command-line parameters
 def parseArgs():
 
@@ -104,6 +109,7 @@ myMQTTClient.configureConnectDisconnectTimeout(10) # 10 sec
 myMQTTClient.configureMQTTOperationTimeout(5) # 5 sec
 
 myMQTTClient.connect()
+myMQTTClient.subscribe("thing01/data", 1 , recievemessage)
 
 # now = datetime.utcnow()
 # now_str = now.strftime('%Y-%m-%dT%H:%M:%SZ')
